@@ -1,0 +1,9 @@
+{
+  "operator": "e2b-bravo",
+  "lhost": "46.161.5.162",
+  "lport": 31337,
+  "cert_cn": "e2b-bravo",
+  "note": "External C2. Do NOT use 127.0.0.1 local cfg — move it to _disabled/",
+  "deploy": "cp e2b-bravo_46.161.5.162.cfg ~/.sliver-client/configs/ && chmod 600 ~/.sliver-client/configs/e2b-bravo_46.161.5.162.cfg",
+  "connect": "./sliver-client -config ~/.sliver-client/configs/e2b-bravo_46.161.5.162.cfg"
+}
