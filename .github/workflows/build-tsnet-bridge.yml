@@ -1,0 +1,48 @@
+name: Build tsnet-bridge
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/tsnet-bridge/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: true
+          cache-dependency-path: tools/tsnet-bridge/go.sum
+
+      - name: Build tsnet-bridge
+        working-directory: tools/tsnet-bridge
+        run: |
+          go mod tidy
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+            -trimpath \
+            -ldflags="-s -w" \
+            -o tsnet-bridge \
+            .
+          ls -lh tsnet-bridge
+          sha256sum tsnet-bridge
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsnet-bridge-linux-amd64
+          path: tools/tsnet-bridge/tsnet-bridge
+          retention-days: 7
+
+      - name: Show download URL hint
+        run: |
+          echo "Artifact will be at:"
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo ""
+          echo "Download in e2b sandbox:"
+          echo "curl -L -H 'Authorization: token <GH_TOKEN>' \\"
+          echo "  https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts \\"
+          echo "  | python3 -c \"import sys,json; [print(a['archive_download_url']) for a in json.load(sys.stdin)['artifacts']]\""
