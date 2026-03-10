@@ -1,0 +1,20 @@
+{
+  "tagOwners": {
+    "tag:e2b-sandbox": ["autogroup:admin"],
+    "tag:c2-server":   ["autogroup:admin"]
+  },
+  "autoApprovers": {
+    "routes": {
+      "10.47.0.0/24": ["tag:e2b-sandbox"],
+      "10.47.1.0/24": ["tag:e2b-sandbox"]
+    }
+  },
+  "acls": [
+    {"action": "accept", "src": ["autogroup:admin"], "dst": ["tag:e2b-sandbox:*"]},
+    {"action": "accept", "src": ["tag:e2b-sandbox"], "dst": ["tag:e2b-sandbox:*"]},
+    {"action": "accept", "src": ["tag:e2b-sandbox"], "dst": ["tag:c2-server:31337,443,8888"]}
+  ],
+  "ssh": [
+    {"action": "accept", "src": ["autogroup:admin"], "dst": ["tag:e2b-sandbox"], "users": ["root","user"]}
+  ]
+}
